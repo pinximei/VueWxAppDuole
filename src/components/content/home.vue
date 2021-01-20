@@ -20,29 +20,67 @@
                     <span>上期开奖</span>
             </div>
             <div class="divTop31">
+                <div class="spane31">
                     <span>距离下次开奖还剩</span>
+                </div>
+                <div class="spane32" >
+                    <span class="spane321">{{lottery_txt_minute}}</span>         
+                </div>
+                <div>
+                    <span class="spane33">分</span>
+                </div>
+                    
+                <div class="spane32" >
+                    <span class="spane321">{{lottery_txt_secode}}</span>          
+                </div>
+                <div class="spane33">
+                    <span > 秒</span>
+                </div>
+                    
+                    
             </div>
-            <div class="divTop32">
-                    <span>{{next_lottery_txt}}</span>
-            </div>
-            <div class="divTop41"> 
-                    <van-notice-bar speed="20"  background="white" color="#ff0000" :left-icon="laba" :text="marqueemessage" />
-            </div>
-        </div>
 
-        <div class="divShowAnimalImg" >
-            <div class="divB11" v-if="false">
-                    <span>开始投注</span>
+        </div>
+            <div class="divTop41"> 
+                    <van-notice-bar speed="20"  background="white" color="#000" :left-icon="laba" :text="marqueemessage" />
             </div>
-            <div>
-                <van-grid :column-num="3" :border="false">
-                    <van-grid-item  v-for="(item, index) in pageInfo[0]" :key="index">
-                        <div class="divShowImg" :style="{'background':curIndex==index?'lightgray':'white'}" @click="changSelectIndex(item, index)">
-                            <van-image :src="item.image" :width=getImgWidth() :height=getImgHeight() />       
-                        </div>
-                        
-                    </van-grid-item>
-                </van-grid>
+        <div class="divShowAnimalImg" >
+            <div class="divContent1">
+                <div class="divContent2">
+                <div class="divContent11">
+                    <div class="divImgAnmal" v-for="(item, index) in 3" 
+                    :key="index"  
+                    v-bind:style="[{backgroundImage:curIndex==index? 'url('+ (pageInfo[0][index].image_selected) +')' : 'url('+ (pageInfo[0][index].image) +')'}]" 
+                    @click="changSelectIndex(pageInfo[0][index], index)"
+                    >
+                    </div>
+                </div>
+                <div class="divContent11">
+                    <div class="divImgAnmal" v-for="(item, index) in 3" 
+                    :key="index" 
+                    v-bind:style="[{backgroundImage:curIndex==(index + 3)? 'url('+ (pageInfo[0][index + 3].image_selected) +')' : 'url('+ (pageInfo[0][index + 3].image) +')' }]" 
+                    @click="changSelectIndex(pageInfo[0][index + 3], index + 3)"
+                    >
+                    </div>
+                </div>
+                <div class="divContent11">
+                    <div class="divImgAnmal" v-for="(item, index) in 3" 
+                    :key="index" 
+                    v-bind:style="[{backgroundImage:curIndex== (index + 6)? 'url('+ (pageInfo[0][index + 6].image_selected) +')' : 'url('+ (pageInfo[0][index + 6].image) +')'}]" 
+                    @click="changSelectIndex(pageInfo[0][index + 6], index + 6)"
+                    >
+                    </div>
+                </div>
+                <div class="divContent11">
+                    <div class="divImgAnmal" v-for="(item, index) in 3" 
+                    :key="index" 
+                    v-bind:style="[{backgroundImage:curIndex== (index + 9)? 'url('+ (pageInfo[0][index + 9].image_selected) +')': 'url('+ (pageInfo[0][index + 9].image) +')'}]" 
+                    @click="changSelectIndex(pageInfo[0][index + 9], index + 9)"
+                    >
+                    </div>
+                </div>
+                </div>
+
             </div>
         </div>
         
@@ -117,6 +155,8 @@
                 rstData:"1234",
                 next_lottery_left:10*60*60,
                 next_lottery_txt:"",
+                lottery_txt_minute:"0",
+                lottery_txt_secode:"0",
                 curId:0,
                 bGetLottert:true,
                 timer:'',
@@ -189,10 +229,10 @@
                 })
             },
             getImgHeight(){
-                return (this.contentHeight - 330) / 4;
+                return (this.contentHeight - 500) / 4;
             },
             getImgWidth(){
-                return (this.contentWidth) / 3 - 20;        
+                return (this.contentWidth - 40) / 3 - 20;        
             },
             changSelectIndex(item, index){
                 if(this.curIndex == index){
@@ -203,7 +243,7 @@
                     this.inputNum = 1;
                     this.animalNum = "1";
                     this.showSubmit = true;
-                    this.curImg = item.image;
+                    this.curImg = item.image_selected;
                     this.curId = item.id;
                     this.titlestr = item.name;
                     this.curIndex = index;
@@ -273,6 +313,8 @@
                 }
                 else{
                     this.next_lottery_txt = moment(this.next_lottery_left).format('mm分ss秒');
+                    this.lottery_txt_minute = moment(this.next_lottery_left).format('mm');
+                    this.lottery_txt_secode = moment(this.next_lottery_left).format('ss');
                 }
                         
             }
@@ -311,38 +353,75 @@
     width: 100%;
     display:flex;
     flex-direction: column;
-    background:#eee 
+    background:#F7F7F7 
 }
 .dviShowPreAnimal{
     width: 100%;
-    height: 200px;
+    height: 180px;
     background:white;
     display: block;
+    background-image: linear-gradient(166deg, #f6681e, #fea544);
 }
 .divShowAnimalImg{
     width: 100%;
     flex-grow: 1;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    background:white
+    margin-top: 8px;
+    margin-bottom: 2px;
+    background:white;
+    display: flex;
+    
 }
+.divContent11{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+}
+.divContent1{
+    flex-grow: 1;
+    width: 100%;
+    background-color: yellow;
+    margin: 10px;
+    display: flex;
+    background: url("../../assets/img/bkColor.png");
+    background-size:100% 100%
+}
+.divContent2{
+     margin: 15px;
+     flex-grow: 1;
+     display: flex;
+     flex-direction: column;
+}
+
+.divImgAnmal{
+    display: flex;
+    flex-grow: 1;
+    margin: 2px 2px 2px 2px;
+    background-size:100% 100%;
+    border: none;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: row;
+}
+
 .divTop1{
     height: 40px;
     display: flex;
     flex-direction: row;
 }
 .divTop11{
-    width: 40px;
+    width: 30px;
     display:flex;
     align-items:flex-end;
     text-align: right;
     font-size: 10px;
+    color: #fafafa;
     padding: 0px 0px 0px 20px;
 }
 .divTop12{
-    width: 100px;
-    font-size: 18px;
+    width: 90px;
+    font-size: 16px;
     display:flex;
+    color: #fafafa;
     align-items:flex-end;
     font-weight: bold;
     
@@ -350,49 +429,73 @@
 .divTop13{
     font-size: 10px;
     display:flex;
+    color: #fafafa;
     align-items:flex-end;
-    color: gray;
 }
 .divTop22{
     position: absolute;
     right: 0;
-    top: 10px;
+    top: 15px;
     width: 40px;
-    height: 40px;
+    height: 45px;
     font-size: 15px;
     text-align: center;
-    background:#f9012d;
+    background:#ffffff88;
     border-radius: 20% 00% 00% 20%;
-    color: white;
+    color: #f77023;
     padding: 10px;
+    
 }
 .divTop21{
-    width: 100%;
-    color: red;
+    width: 80px;
+    color: #F7F7F7;
     align-items:flex-end;
-    height: 50px;
-    line-height: 50px;
+    height: 30px;
+    line-height: 30px;
     text-align: center;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 15px;
+    border: 1px solid #F7F7F7;
+    border-radius: 7%;
+    margin: 10px 0px 0px 20px;
+    
 }
 .divTop31{
+    width: 100%;
+    height: 80px;
+    margin-top: 20px;
+    background:#ffffff;
+    border-radius: 15px 15px 0% 00%;
+    line-height: 80px;
+    text-align: left;
+    font-weight: bold;
+    display: flex;
+}
+.spane31{
     margin-left: 20px;
+    padding: 0px 10px 0px 0px;
+    
 }
-.divTop32{
-    width: 100%;
-    height: 50px;
-    line-height: 50px;
-    align-items: center;
+.spane32{
+    display: block;
+    width: 26px;
+    height: 30px;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 30px;
+    color: #F6681E;
     text-align: center;
-    font-weight: bold;
+    background-color:#fdf3d7;
+    margin: 25px 3px 0px 3px;
 }
-.divB11{
-    width: 100%;
-    padding: 10px 00px 20px 20px;
-    font-weight: bold;
+.spane33{
+    font-weight: normal;
+    color: #737373;
+   
 }
-
+.divTop41{
+    margin: 8px 0px 0px 0px;
+}
 .divShowImg{
     padding: 10px;
     border: none;
@@ -476,6 +579,10 @@ image{
 }
 .spanred{
     color: red;
+}
+/deep/ .van-icon__image{
+    width: 35px;
+    height: 35px;
 }
 /deep/ .van-grid-item__content{
             padding: 0px;
