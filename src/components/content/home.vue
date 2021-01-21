@@ -19,7 +19,7 @@
             <div class="divTop22">
                     <span>上期开奖</span>
             </div>
-            <div class="divTop31">
+            <div class="divTop31" v-show="next_lottery_txt == 0">
                 <div class="spane31">
                     <span>距离下次开奖还剩</span>
                 </div>
@@ -36,8 +36,12 @@
                 <div class="spane33">
                     <span > 秒</span>
                 </div>
-                    
-                    
+            </div>
+
+            <div class="divTop51" v-show="next_lottery_txt == 1">
+                <div class="divTop52">
+                    <span>即将开奖</span>
+                </div>
             </div>
 
         </div>
@@ -50,32 +54,32 @@
                 <div class="divContent11">
                     <div class="divImgAnmal" v-for="(item, index) in 3" 
                     :key="index"  
-                    v-bind:style="[{backgroundImage:curIndex==index? 'url('+ (pageInfo[0][index].image_selected) +')' : 'url('+ (pageInfo[0][index].image) +')'}]" 
-                    @click="changSelectIndex(pageInfo[0][index], index)"
+                    v-bind:style="[{backgroundImage:pageInfo.length == 0?'': curIndex== index ? 'url('+ getbkUrl(1, pageInfo[index].id) +')' : 'url('+ getbkUrl(0, pageInfo[index].id) +')'}]" 
+                    @click="changSelectIndex(pageInfo[index], index)"
                     >
                     </div>
                 </div>
                 <div class="divContent11">
                     <div class="divImgAnmal" v-for="(item, index) in 3" 
                     :key="index" 
-                    v-bind:style="[{backgroundImage:curIndex==(index + 3)? 'url('+ (pageInfo[0][index + 3].image_selected) +')' : 'url('+ (pageInfo[0][index + 3].image) +')' }]" 
-                    @click="changSelectIndex(pageInfo[0][index + 3], index + 3)"
+                    v-bind:style="[{backgroundImage:pageInfo.length == 0?'': curIndex==(index + 3)? 'url('+ getbkUrl(1, pageInfo[index + 3].id) +')' : 'url('+ getbkUrl(0, pageInfo[index + 3].id) +')'}]" 
+                    @click="changSelectIndex(pageInfo[index + 3], index + 3)"
                     >
                     </div>
                 </div>
                 <div class="divContent11">
                     <div class="divImgAnmal" v-for="(item, index) in 3" 
                     :key="index" 
-                    v-bind:style="[{backgroundImage:curIndex== (index + 6)? 'url('+ (pageInfo[0][index + 6].image_selected) +')' : 'url('+ (pageInfo[0][index + 6].image) +')'}]" 
-                    @click="changSelectIndex(pageInfo[0][index + 6], index + 6)"
+                    v-bind:style="[{backgroundImage:pageInfo.length == 0?'': curIndex== (index + 6)? 'url('+ getbkUrl(1, pageInfo[index + 6].id) +')' : 'url('+ getbkUrl(0, pageInfo[index + 6].id) +')'}]" 
+                    @click="changSelectIndex(pageInfo[index + 6], index + 6)"
                     >
                     </div>
                 </div>
                 <div class="divContent11">
                     <div class="divImgAnmal" v-for="(item, index) in 3" 
                     :key="index" 
-                    v-bind:style="[{backgroundImage:curIndex== (index + 9)? 'url('+ (pageInfo[0][index + 9].image_selected) +')': 'url('+ (pageInfo[0][index + 9].image) +')'}]" 
-                    @click="changSelectIndex(pageInfo[0][index + 9], index + 9)"
+                    v-bind:style="[{backgroundImage:pageInfo.length == 0?'': curIndex== (index + 9)? 'url('+ getbkUrl(1, pageInfo[index + 9].id) +')' : 'url('+ getbkUrl(0, pageInfo[index + 9].id) +')'}]" 
+                    @click="changSelectIndex(pageInfo[index + 9], index + 9)"
                     >
                     </div>
                 </div>
@@ -85,44 +89,14 @@
         </div>
         
         <div class="divSubmit" v-show="showSubmit">
-            <van-card
-            :thumb="curImg"
-            >
-            <template #title>
-                <div class="divdstxt">
-                    <div class="divdsName">
-                        <span>单价 ￥{{curPrice / 100}}</span>
+            <div class="div71">
+                    <div class="div711">
+                            
                     </div>
-                    <div class="disvdsnum">
-                        <span>数量</span>
-                        <div class="divdsinput">
-                                <input v-model="animalNum"  type="number" oninput="if(value.length>5)value=value.slice(0,5); if(value< 0)value=0;"/>
-                        </div>
-                        <div class="divdsarrow">
-                            <div class="divupimg">
-                                <img class="diviimg" :src="upA" width="20px" height="20px" @click="upNum">
-                            </div>
-                            <div class="divdownimg">
-                                <img class="diviimg" :src="dounA" width="20px" height="20px" @click="downNum" >
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <div class="divdsbt">
-                        <div class="divdsbttxt"> 
-                                <span>总计:</span>      
-                                <span class="spanred">￥{{totalPrice}}</span>
-                            </div>
-                            
-                        
-                        <div class="divdsbtSubmitBtn">
-                            <van-button round type="primary" color="red" @click="createOder">提交订单</van-button>
-                        </div>
-                            
-                        </div>
-                </div>
-            </template>
-            </van-card>
+            </div>
+            <div class="div81">
+
+            </div>
         </div>
         
     </div>
@@ -154,7 +128,7 @@
                 inputNum:1,
                 rstData:"1234",
                 next_lottery_left:10*60*60,
-                next_lottery_txt:"",
+                next_lottery_txt:0,
                 lottery_txt_minute:"0",
                 lottery_txt_secode:"0",
                 curId:0,
@@ -171,6 +145,12 @@
             this.timer = setInterval(this.startTime, 1000);
         },
         methods:{
+            getbkUrl(type, index){
+                if(type == 0){
+                    return require("@/assets/img/"+ index+".png");
+                }
+                return require("@/assets/img/"+ index+"_Hover.png");
+            },
             downNum(){
                 let num = parseInt(this.animalNum);
                 if(num == 1){
@@ -218,11 +198,13 @@
                             }
                          })
                 .then((success) => {
+                    console.log(success)
                     // var pageInfo = success["prod_infos"];
-                    this.$set(this.pageInfo, 0, success.data.prod_infos); 
-                    this.curImg = this.pageInfo[0][0].image;
-                     this.titlestr = "生肖：" + this.pageInfo[0][0].name;
-                     this.curId = this.pageInfo[0][0].id;
+                    this.pageInfo = success.data.prod_infos;
+
+                    this.curImg = this.pageInfo[0].image;
+                     this.titlestr = "生肖：" + this.pageInfo[0].name;
+                     this.curId = this.pageInfo[0].id;
                     // console.log(this.pageInfo);
                 }, (error) => {
                     console.log(error);
@@ -301,7 +283,7 @@
                 this.next_lottery_left -= 1000;
                 if(this.next_lottery_left <= 0 && this.next_lottery_left > -10 * 500){
                     this.bGetLottert = true;
-                    this.next_lottery_txt = "即将开奖";
+                    this.next_lottery_txt = 1;
                     return;
                 }
                 else if(this.next_lottery_left <= -10 * 500){
@@ -309,10 +291,10 @@
                         this.getMarqueeInfo();
                         this.bGetLottert = false;
                     }
-                    this.next_lottery_txt = "即将开奖"; 
+                    this.next_lottery_txt = 1; 
                 }
                 else{
-                    this.next_lottery_txt = moment(this.next_lottery_left).format('mm分ss秒');
+                    this.next_lottery_txt = 0;
                     this.lottery_txt_minute = moment(this.next_lottery_left).format('mm');
                     this.lottery_txt_secode = moment(this.next_lottery_left).format('ss');
                 }
@@ -353,7 +335,8 @@
     width: 100%;
     display:flex;
     flex-direction: column;
-    background:#F7F7F7 
+    background:#F7F7F7;
+    font-family: sans-serif; 
 }
 .dviShowPreAnimal{
     width: 100%;
@@ -471,6 +454,28 @@
     font-weight: bold;
     display: flex;
 }
+
+.divTop51{
+    width: 100%;
+    height: 80px;
+    margin-top: 20px;
+    line-height: 80px;
+    text-align: center;
+    background:#ffffff;
+    align-items: center;
+    color: #F7F7F7;
+    display: flex;
+    justify-content:center
+}
+
+.divTop52{
+    width: 200px;
+    height: 40px;
+    border-radius: 5px;
+    line-height: 40px;
+    background-image: linear-gradient(146deg, #f6681e, #ffaa47);
+}
+
 .spane31{
     margin-left: 20px;
     padding: 0px 10px 0px 0px;
@@ -505,94 +510,24 @@
     width: 100%;
     bottom: 0px;
     z-index: 100;
-}
-.divdstxt{
-    margin-left: 5px;
-}
-.divdsName{
+    background:#F7F7F7;
 
-    padding: 0px 0px 10px 0px;
-} 
-.disvdsnum{
-    display: flex;
-    height: 35px;
-    line-height: 35px;
-    vertical-align: middle;
 }
-.divdsinput{
-    width: 30px;
-    height: 35px;
-    padding: 0px 0px 0px 10px;
-    font-size: 15px;
-    text-align: center;
+.div71{
+    width: 100%;
+    height: 100px;
+    background:white;
+    display: inline-block;
 }
-input{
-    width: 60px;
-    height: 30px;
-} 
-
-.divdsarrow{
-    margin-left: 40px;
-    width: 20px;
-    height: 35px;
-    display: flex;
-    flex-direction: column;
-}
-.divupimg{
-    width: 15px;
-    height: 15px;
-    border: 1px solid;
-    padding: 0px;
-    display: block;
-}
-.divupimg:active{
-    background: lightgray;
-}
-.divdownimg{
-    width: 15px;
-    height: 15px;
-    border: 1px solid;
+.div81{
+    width: 100%;
+    height: 50px;
+    background:white;
     margin-top: 2px;
-    padding: 0px;
-    display: block;
-    
 }
-image{
-    padding: 0px;
-}
-.divdownimg:active{
-    background: lightgray;
-}
-.divdsbt{
-    float: right;
-    height: 45px;
-    display: flex;
-}
-.divdsbttxt{
-    width: 130px;
-    padding: 20px 0px 0px 0px;
-    font-size: 18px;
-    font-weight: bold;
-}
-.divdsbtSubmitBtn{
-    margin-top: 5px;
-}
-.spanred{
-    color: red;
-}
+
 /deep/ .van-icon__image{
     width: 35px;
     height: 35px;
-}
-/deep/ .van-grid-item__content{
-            padding: 0px;
-        }
-
-/deep/ .van-row{
-        width: 100%;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 </style>
