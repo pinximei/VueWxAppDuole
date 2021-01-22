@@ -42,10 +42,10 @@
                         <h5>中奖概率统计</h5>
                 </div>
                 <div class="gailvfbtxt">
-                        <h5>最高中奖概率生肖:{{minName}}  概率:{{maxProb}}%</h5>
+                        <h5>最高中奖概率生肖:{{maxName}}  概率:{{maxProb}}%</h5>
                 </div>
                 <div class="gailvfbtxt">
-                        <h5>最低中奖概率生肖:{{maxName}}  概率:{{minProb}}%</h5>
+                        <h5>最低中奖概率生肖:{{minName}}  概率:{{minProb}}%</h5>
                 </div>
             </div>
             <div class="gailiFb">
@@ -202,8 +202,9 @@ import moment from 'moment'
 <style scoped>
 .histtoryRoot{    
     width: 100%;
-    display: inline-block; 
-    background:#eee 
+    display: flex; 
+    background:#F7F7F7 ;
+    flex-direction: column;
 }
 .divTabs{
     display:flex;
@@ -234,15 +235,14 @@ import moment from 'moment'
     margin: 10px 0px 0px 0px;
     width: 100%;
     display: inline-block;
-    background:white
+    background:white;
+    flex-grow: 1;
 }
 
 .divPageCount{
     width: 100%;
-    position: relative;
-    left: 0;
-    bottom: 0px;
-    background:white
+    background:white;
+    margin: 2px 0px 2px 0px;
 }
 table{
     width: 90%;

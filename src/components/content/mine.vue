@@ -160,7 +160,7 @@ export default {
 .mineRoot{    
     width: 100%;
     display: inline-block; 
-    background:#eee 
+    background:#F7F7F7 
 }
 .head{
     width: 100%;

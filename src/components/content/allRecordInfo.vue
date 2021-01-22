@@ -107,7 +107,7 @@
 .allRecordRoot{
     width: 100%;
     display: inline-block; 
-    background:#eee 
+    background:#F7F7F7 
 }
 .head{
     width: 100%;
@@ -166,8 +166,8 @@
 .divRowContent{
     display: flex;
     flex-direction:column;
-    background:#f0f0f0;
-    font-size: 12px;
+    background:#F7F7F7;
+    font-size: 13px;
     height: 64px;
 }
 .divTermId{
@@ -183,13 +183,13 @@
     font-weight: bold;
 }
 .divPrice {
-    margin:5px 20px 2px 50px;
+    margin:4px 20px 2px 50px;
 }
 .divBuyCnt {
-   margin:2px 20px 2px 50px;
+   margin:1px 20px 2px 50px;
 }
 .divCreateTime {
-    margin:2px 20px 2px 50px;
+    margin:1px 20px 2px 50px;
 }
 
 

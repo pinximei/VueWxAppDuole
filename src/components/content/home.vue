@@ -21,7 +21,7 @@
             </div>
             <div class="divTop31" v-show="next_lottery_txt == 0">
                 <div class="spane31">
-                    <span>距离下次开奖还剩</span>
+                    <span>距离下期开奖还剩</span>
                 </div>
                 <div class="spane32" >
                     <span class="spane321">{{lottery_txt_minute}}</span>         
@@ -49,38 +49,40 @@
                     <van-notice-bar speed="20"  background="white" color="#000" :left-icon="laba" :text="marqueemessage" />
             </div>
         <div class="divShowAnimalImg" >
-            <div class="divContent1">
+            <div class="divContent1" :style="{'background':'url('+animalBkImg  +')', 'background-size':'100% 100%'} ">
                 <div class="divContent2">
                 <div class="divContent11">
                     <div class="divImgAnmal" v-for="(item, index) in 3" 
                     :key="index"  
-                    v-bind:style="[{backgroundImage:pageInfo.length == 0?'': curIndex== index ? 'url('+ getbkUrl(1, pageInfo[index].id) +')' : 'url('+ getbkUrl(0, pageInfo[index].id) +')'}]" 
+                   
                     @click="changSelectIndex(pageInfo[index], index)"
                     >
+                    <img   width="100%" class="imag" :src="curIndex==index ?pageInfo[index].image_selected : pageInfo[index].image" alt="">
                     </div>
                 </div>
                 <div class="divContent11">
                     <div class="divImgAnmal" v-for="(item, index) in 3" 
                     :key="index" 
-                    v-bind:style="[{backgroundImage:pageInfo.length == 0?'': curIndex==(index + 3)? 'url('+ getbkUrl(1, pageInfo[index + 3].id) +')' : 'url('+ getbkUrl(0, pageInfo[index + 3].id) +')'}]" 
+                   
                     @click="changSelectIndex(pageInfo[index + 3], index + 3)"
                     >
+                    <img   width="100%" class="imag" :src="curIndex==index + 3 ?pageInfo[index + 3].image_selected : pageInfo[index + 3].image" alt="">
                     </div>
                 </div>
                 <div class="divContent11">
                     <div class="divImgAnmal" v-for="(item, index) in 3" 
                     :key="index" 
-                    v-bind:style="[{backgroundImage:pageInfo.length == 0?'': curIndex== (index + 6)? 'url('+ getbkUrl(1, pageInfo[index + 6].id) +')' : 'url('+ getbkUrl(0, pageInfo[index + 6].id) +')'}]" 
                     @click="changSelectIndex(pageInfo[index + 6], index + 6)"
                     >
+                   <img   width="100%" class="imag" :src="curIndex==(index + 6) ?pageInfo[index + 6].image_selected : pageInfo[index + 6].image" alt="">
                     </div>
                 </div>
                 <div class="divContent11">
                     <div class="divImgAnmal" v-for="(item, index) in 3" 
                     :key="index" 
-                    v-bind:style="[{backgroundImage:pageInfo.length == 0?'': curIndex== (index + 9)? 'url('+ getbkUrl(1, pageInfo[index + 9].id) +')' : 'url('+ getbkUrl(0, pageInfo[index + 9].id) +')'}]" 
                     @click="changSelectIndex(pageInfo[index + 9], index + 9)"
                     >
+                    <img   width="100%" class="imag" :src="curIndex==(index + 9) ?pageInfo[index + 9].image_selected : pageInfo[index + 9].image" alt="">
                     </div>
                 </div>
                 </div>
@@ -91,11 +93,44 @@
         <div class="divSubmit" v-show="showSubmit">
             <div class="div71">
                     <div class="div711">
-                            
+                            <img :src="curImg" width= "90px" height="80px" >
+                    </div>
+                    <div class="div712">
+                            <div class="div7121">
+                                    <span>{{titlestr}}</span>
+                            </div>
+                            <div class="div7122">
+                                    <span>单价 ￥{{curPrice / 100}}</span>
+                            </div>
+                            <div class="div7123">
+                                    <span>数量</span>
+                                    <div class="div71231">
+                                        <div class="div712311" @click="downNum">
+
+                                        </div>
+                                          <input class="inputNum" v-model="animalNum"  type="number" oninput="if(value.length>5)value=value.slice(0,5); if(value< 0)value=0;"/>
+                                        <div class="div712313" @click="upNum">
+
+                                        </div>
+                                    </div>
+                            </div>
                     </div>
             </div>
             <div class="div81">
+                <div class="div811">
+                    <span>总计</span>
+                </div>
+                <div class="div812">
+                    <span>￥{{totalPrice}}</span>
+                </div>
+                <div class="div813">
 
+                </div>
+                <div class="div814">
+                    <div class="div8141" @click="createOder">
+                        <span>提交订单</span>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -110,8 +145,7 @@
         props:['contentHeight', 'contentWidth', 'showPageIndex'],
         data() {
             return {
-                upA:require("@/assets/img/upA.png"),
-                dounA:require("@/assets/img/dounA.png"),
+                animalBkImg:require('@/assets/img/bkColor.png'),
                 animalNum:"1",
                 showSubmit:false,
                 curIndex:-1,
@@ -145,12 +179,6 @@
             this.timer = setInterval(this.startTime, 1000);
         },
         methods:{
-            getbkUrl(type, index){
-                if(type == 0){
-                    return require("@/assets/img/"+ index+".png");
-                }
-                return require("@/assets/img/"+ index+"_Hover.png");
-            },
             downNum(){
                 let num = parseInt(this.animalNum);
                 if(num == 1){
@@ -202,7 +230,7 @@
                     // var pageInfo = success["prod_infos"];
                     this.pageInfo = success.data.prod_infos;
 
-                    this.curImg = this.pageInfo[0].image;
+                    this.curImg = this.pageInfo[0].image_selected;
                      this.titlestr = "生肖：" + this.pageInfo[0].name;
                      this.curId = this.pageInfo[0].id;
                     // console.log(this.pageInfo);
@@ -362,11 +390,9 @@
 .divContent1{
     flex-grow: 1;
     width: 100%;
-    background-color: yellow;
     margin: 10px;
     display: flex;
-    background: url("../../assets/img/bkColor.png");
-    background-size:100% 100%
+    
 }
 .divContent2{
      margin: 15px;
@@ -385,7 +411,9 @@
     display: flex;
     flex-direction: row;
 }
-
+.imag{
+    flex-grow: 1;
+}
 .divTop1{
     height: 40px;
     display: flex;
@@ -396,7 +424,7 @@
     display:flex;
     align-items:flex-end;
     text-align: right;
-    font-size: 10px;
+    font-size: 13px;
     color: #fafafa;
     padding: 0px 0px 0px 20px;
 }
@@ -410,7 +438,7 @@
     
 }
 .divTop13{
-    font-size: 10px;
+    font-size: 13px;
     display:flex;
     color: #fafafa;
     align-items:flex-end;
@@ -517,15 +545,111 @@
     width: 100%;
     height: 100px;
     background:white;
-    display: inline-block;
+    display: flex;
+}
+
+.div711{
+    display: flex;
+    width: 90px;
+    height: 100px;
+    justify-content:center;
+    align-items: center;
+    padding: 0px 0px 0px 10px;
+}
+.div712{
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+}
+.div7121{
+    font-weight: bold;
+    font-size: 18px;
+    margin: 10px 0px 0px 20px;
+}
+.div7122{
+    font-size: 15px;
+    margin: 5px 0px 0px 10px;
+}
+.div7123{
+    font-size: 15px;
+    margin: 5px 0px 0px 10px;
+    display: flex;
+}
+.div71231{
+    display: flex;
+}
+.div712311{
+    width: 18px;
+    height: 18px;
+    background: url("../../assets/img/leftBtn.png");
+    background-size:100% 100%;
+    margin: 2px 0px 0px 10px;
+}
+
+.div712313{
+    width: 18px;
+    height: 18px;
+    background: url("../../assets/img/rightBtn.png");
+    background-size:100% 100%;
+    margin: 2px 0px 0px 5px;
+}
+.inputNum{
+    width: 80px;
+    height: 20px;
+    border: none;
+    text-align: center;
+    margin-left: 5px;
+    background-color: #f66a1f44;
+    color: #f66a1f;
+    
 }
 .div81{
     width: 100%;
     height: 50px;
     background:white;
     margin-top: 2px;
+    display: flex;
 }
 
+.div811{
+    width: 40px;
+    height: 35px;
+    margin: 15px 0px 00px 20px;
+    vertical-align: bottom;
+}
+
+.div812{
+    width: 80px;
+    height: 35px;
+    margin: 12px 0px 10px 00px;
+    vertical-align: bottom;
+    font-weight: bold;
+    font-size: 20px;
+    color: #CD1D1B;
+}
+
+.div813{
+    flex-grow: 1;
+}
+.div814{
+    display: flex;
+    width: 180px;
+    height: 50px;
+    align-items: center;
+    justify-content:center;
+    vertical-align: middle;
+    
+}
+.div8141{
+    width: 150px;
+    height: 35px;
+    background-image: linear-gradient(146deg, #f6681e, #ffaa47);
+    border-radius: 5px;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-align: center;
+    line-height: 35px;
+}
 /deep/ .van-icon__image{
     width: 35px;
     height: 35px;

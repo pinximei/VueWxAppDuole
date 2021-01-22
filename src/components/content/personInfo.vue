@@ -166,7 +166,7 @@
 <style scoped>
 .personRoot{
     display: inline-block; 
-    background:#ddd 
+    background:#F7F7F7 
 }
 .head{
     width: 100%;
