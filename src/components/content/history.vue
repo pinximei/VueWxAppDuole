@@ -181,13 +181,15 @@ import moment from 'moment'
         }
     },
     created() {
-                this.getRealTableCount();
-                this.getWinnerProb();
-                this.getLotteryHistory(this.curIndex, this.pageNumCount);
-                this.bFirstCreate = true;
+            this.getRealTableCount();
     },
     watch:{
         showPageIndex(newValue, oldValue){
+            if(newValue == 1 && !this.bFirstCreate){
+                this.getWinnerProb();
+                this.getLotteryHistory(this.curIndex, this.pageNumCount);
+                this.bFirstCreate = true;
+            }
             if(this.$store.state.reUpdateHistory && newValue == 1 && this.bFirstCreate){
                 
                 this.getLotteryHistory(this.curIndex, this.pageNumCount);

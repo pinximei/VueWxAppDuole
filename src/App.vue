@@ -4,7 +4,7 @@
     <div class="app-content" :style="{height:conheight.height}" >
         <homeComp    v-show="showIndex == 0" :showPageIndex="showIndex" :contentHeight="realContentHeight" :contentWidth="realContentWidth"></homeComp>
         <historyComp v-show="showIndex == 1" :showPageIndex="showIndex" :contentHeight="realContentHeight" :contentWidth="realContentWidth"></historyComp>
-        <mineComp  @curPage="indexChange" v-show="showIndex == 2"  :contentHeight="realContentHeight" :contentWidth="realContentWidth"></mineComp>
+        <mineComp  @curPage="indexChange" :showPageIndex="showIndex" v-show="showIndex == 2"  :contentHeight="realContentHeight" :contentWidth="realContentWidth"></mineComp>
         
     </div>
     <div class="app-footer">

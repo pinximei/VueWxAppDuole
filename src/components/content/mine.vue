@@ -48,9 +48,10 @@
 import moment from 'moment'
 
 export default {
-    props:['contentHeight', 'contentWidth'],
+    props:['contentHeight', 'contentWidth', 'showPageIndex'],
     data(){
         return{
+            bFirstCreate:false,
             aboutUs:"",
             aboutAct:"",
             rightAroor: require('@/assets/img/rightArror.png'),
@@ -151,6 +152,14 @@ export default {
     },
     created(){
         this.getUserInfo();
+    },
+    watch:{
+        showPageIndex(newValue, oldValue){
+            if(newValue == 2 && !this.bFirstCreate){
+                this.getUserInfo();
+                this.bFirstCreate = true;
+            }
+        }
     }
 
 }
