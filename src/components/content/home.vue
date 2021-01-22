@@ -50,41 +50,21 @@
             </div>
         <div class="divShowAnimalImg" >
             <div class="divContent1" :style="{'background':'url('+animalBkImg  +')', 'background-size':'100% 100%'} ">
-                <div class="divContent2">
+                
                 <div class="divContent11">
-                    <div class="divImgAnmal" v-for="(item, index) in 3" 
-                    :key="index"  
-                   
-                    @click="changSelectIndex(pageInfo[index], index)"
+                    <div class="divContent2"
+                        v-for="(itemrow, indexrow) in showRow" 
+                        :key="indexrow"  
                     >
-                    <img   width="100%" class="imag" :src="curIndex==index ?pageInfo[index].image_selected : pageInfo[index].image" alt="">
+                        <div class="divImgAnmal" 
+                        v-for="(itemcol, indexcol) in showColumn" 
+                        :key="indexcol"  
+                        ref="refImgAnmal"
+                        @click="changSelectIndex(pageInfo[indexrow*showColumn + indexcol], indexrow*showColumn + indexcol)"
+                        >
+                        <img   width="100%" :height="imgH"  class="imag" :src="pageInfo.length==0?'':curIndex==(indexrow*showColumn + indexcol) ?pageInfo[indexrow*showColumn + indexcol].image_selected : pageInfo[indexrow*showColumn + indexcol].image" alt="">
+                        </div>
                     </div>
-                </div>
-                <div class="divContent11">
-                    <div class="divImgAnmal" v-for="(item, index) in 3" 
-                    :key="index" 
-                   
-                    @click="changSelectIndex(pageInfo[index + 3], index + 3)"
-                    >
-                    <img   width="100%" class="imag" :src="curIndex==index + 3 ?pageInfo[index + 3].image_selected : pageInfo[index + 3].image" alt="">
-                    </div>
-                </div>
-                <div class="divContent11">
-                    <div class="divImgAnmal" v-for="(item, index) in 3" 
-                    :key="index" 
-                    @click="changSelectIndex(pageInfo[index + 6], index + 6)"
-                    >
-                   <img   width="100%" class="imag" :src="curIndex==(index + 6) ?pageInfo[index + 6].image_selected : pageInfo[index + 6].image" alt="">
-                    </div>
-                </div>
-                <div class="divContent11">
-                    <div class="divImgAnmal" v-for="(item, index) in 3" 
-                    :key="index" 
-                    @click="changSelectIndex(pageInfo[index + 9], index + 9)"
-                    >
-                    <img   width="100%" class="imag" :src="curIndex==(index + 9) ?pageInfo[index + 9].image_selected : pageInfo[index + 9].image" alt="">
-                    </div>
-                </div>
                 </div>
 
             </div>
@@ -145,6 +125,10 @@
         props:['contentHeight', 'contentWidth', 'showPageIndex'],
         data() {
             return {
+                imgW:"0px",
+                imgH:"0px",
+                showRow:0,
+                showColumn:0,
                 animalBkImg:require('@/assets/img/bkColor.png'),
                 animalNum:"1",
                 showSubmit:false,
@@ -173,12 +157,31 @@
             }
         },
 
-        mounted:function(){
+        created:function(){
+            this.getRealRowColumn();
             this.getMarqueeInfo();
             this.getPageInfo();
             this.timer = setInterval(this.startTime, 1000);
         },
         methods:{
+            getRealRowColumn(){
+                let tmpValue = 10000;
+                let realHeight = this.contentHeight - 290;
+                let realWidth = this.contentWidth - 50;
+                for(let col = 2; col < 7; col ++){
+                    let row = 12 / col;
+
+                    let tmpX = realWidth / col;
+                    let tmpY = realHeight / row;
+
+                    let value = Math.abs(tmpX - tmpY);
+                    if(value < tmpValue){
+                        this.showRow = row;
+                        this.showColumn = col;
+                        tmpValue = value;
+                    }
+                }
+            },
             downNum(){
                 let num = parseInt(this.animalNum);
                 if(num == 1){
@@ -216,7 +219,10 @@
                     this.$store.commit("setUpdateHistory", true);
 
                 }, (error) => {
-                console.log(error);
+                // console.log(error);
+                    setTimeout(() => {
+                        getMarqueeInfo();
+                    }, 100);
                 })
             },
             getPageInfo(){
@@ -226,7 +232,8 @@
                             }
                          })
                 .then((success) => {
-                    console.log(success)
+                    this.imgw = this.$refs.refImgAnmal[0].clientWidth + "px";
+                    this.imgH = this.$refs.refImgAnmal[0].offsetHeight  + "px";
                     // var pageInfo = success["prod_infos"];
                     this.pageInfo = success.data.prod_infos;
 
@@ -382,11 +389,7 @@
     display: flex;
     
 }
-.divContent11{
-    flex-grow: 1;
-    display: flex;
-    flex-direction: row;
-}
+
 .divContent1{
     flex-grow: 1;
     width: 100%;
@@ -394,11 +397,16 @@
     display: flex;
     
 }
+.divContent11{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    margin: 15px;
+}
 .divContent2{
-     margin: 15px;
      flex-grow: 1;
      display: flex;
-     flex-direction: column;
+     flex-direction: row;
 }
 
 .divImgAnmal{
