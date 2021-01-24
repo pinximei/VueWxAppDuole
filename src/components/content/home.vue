@@ -48,7 +48,7 @@
             <div class="divTop41"> 
                     <van-notice-bar speed="20"  background="white" color="#000" :left-icon="laba" :text="marqueemessage" />
             </div>
-        <div class="divShowAnimalImg" >
+        <div class="divShowAnimalImg">
             <div class="divContent1" :style="{'background':'url('+animalBkImg  +')', 'background-size':'100% 100%'} ">
                 
                 <div class="divContent11">
@@ -547,6 +547,7 @@
     bottom: 0px;
     z-index: 100;
     background:#F7F7F7;
+    display: inline-block;
 
 }
 .div71{
@@ -613,7 +614,6 @@
 }
 .div81{
     width: 100%;
-    height: 50px;
     background:white;
     margin-top: 2px;
     display: flex;

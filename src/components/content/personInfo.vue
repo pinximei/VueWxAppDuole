@@ -17,9 +17,17 @@
         </div>
         <div class="info">
             <!-- 输入任意文本 -->
-            <van-field v-model="userName" label="用户名" :readonly="disableUserName" :right-icon="updateImg" @click-right-icon="updateNameFlag" />
+            <van-field ref="refName"  
+            v-model="userName" label="用户名" 
+            :readonly="disableUserName" 
+            :right-icon="disableUserName?updateImg:updateImgHorver" 
+            @click-right-icon="updateNameFlag" />
             <!-- 输入手机号，调起手机号键盘 -->
-            <van-field v-model="userPhone" type="tel" :readonly="disableUserPhone" label="手机号" :right-icon="updateImg" @click-right-icon="updatePhoneFlag" />
+            <van-field ref="refPhone" 
+            v-model="userPhone" type="tel" 
+            :readonly="disableUserPhone" label="手机号" 
+            :right-icon="disableUserPhone?updateImg:updateImgHorver" 
+            @click-right-icon="updatePhoneFlag" />
             
             <div class="chooseAvatar">
                 <div class="txtAvatar">
@@ -62,7 +70,8 @@
                 userImg:"",
                 curUserImg:"",
                 updateFlag : true,
-                updateImg:require("@/assets/img/updateTitle.png")
+                updateImg:require("@/assets/img/updateTitle.png"),
+                updateImgHorver:require("@/assets/img/updateTitleHorver.png")
             }
         },
         methods:{
@@ -91,7 +100,6 @@
                         }
                         })
             .then((success) => {
-                console.log(success)
                 this.avatarlist = success.data.avatar
                 this.avatarlist.forEach(element => {
                     element.style = this.uncheckStyle;
@@ -128,10 +136,32 @@
             updatePhoneFlag(){
                 this.updateFlag = true;
                 this.disableUserPhone = !this.disableUserPhone;
+                setTimeout(() => {
+                    if(!this.disableUserPhone){
+                        this.$refs.refPhone.focus()
+                        this.$refs.refPhone.$refs.input.style.backgroundColor="#f66a1f44"
+                    }
+                    else{
+                        this.$refs.refPhone.blur()
+                        this.$refs.refPhone.$refs.input.style.backgroundColor="white"
+                    }
+                }, 100);
+                
             },
             updateNameFlag(){
                 this.updateFlag = true;
                 this.disableUserName = !this.disableUserName;
+                setTimeout(() => {
+                    if(!this.disableUserName){
+                        this.$refs.refName.focus()
+                        this.$refs.refName.$refs.input.style.backgroundColor="#f66a1f44"
+                    }
+                    else{
+                        this.$refs.refName.blur()
+                        this.$refs.refName.$refs.input.style.backgroundColor="white"
+                    }
+                }, 100);
+
             },
             clickItem(){
                 this.$emit("curPage", 2); 
