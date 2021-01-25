@@ -17,7 +17,7 @@ Vue.prototype.$http = axios
 Vue.use(oView);
 
 Vue.prototype.$qs = qs;
-store.state.openId = localStorage.getItem('openId') == null ? "oTOQT6qcO5HHd-5RkJO0g-DD5fjI" : localStorage.getItem('openId');
+store.state.openId = localStorage.getItem('openId') == null ? "" : localStorage.getItem('openId');
 Vue.config.productionTip = false
 Vue.prototype.$md5 = md5;
 /* eslint-disable no-new */
