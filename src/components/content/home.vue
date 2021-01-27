@@ -19,6 +19,9 @@
             <div class="divTop22">
                     <span>上期开奖</span>
             </div>
+            <!-- <div class="divTop202">
+                    <span>分享朋友</span>
+            </div> -->
             <div class="divTop31" v-show="next_lottery_txt == 0">
                 <div class="spane31">
                     <span>距离下期开奖还剩</span>
@@ -161,9 +164,79 @@
             this.getRealRowColumn();
             this.getMarqueeInfo();
             this.getPageInfo();
+            this.getShareInfo();
             this.timer = setInterval(this.startTime, 1000);
         },
         methods:{
+            shareWX(tick, imgUrl){
+                //分享到朋友圈
+                var urlLocal = window.location.href.split('#')[0];
+                // var urlReal = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbe68382a9463a04e&redirect_uri=http%3A%2F%2Fwww.duole.site%2Fdist%2Findex.html&response_type=code&scope=snsapi_base&state=123#wechat_redirect';
+                
+                var urlReal = 'http://duole.site/dist/index.html';
+                var tempTm = Date.parse(new Date()) / 1000;
+                let _this = this;
+                var stringA = "jsapi_ticket=" + tick +"&noncestr=e61463ffbbb555&timestamp="+tempTm + "&url=" + urlLocal;
+                var tmpString = this.$sha1(stringA);
+
+                _this.$wx.config({
+                    debug: false,// 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                    appId: 'wxbe68382a9463a04e',         // 必填，公众号的唯一标识，填自己的！
+                    timestamp: tempTm, // 必填，生成签名的时间戳，刚才接口拿到的数据
+                    nonceStr: "e61463ffbbb555",   // 必填，生成签名的随机串
+                    signature: tmpString, // 必填，签名，见附录1
+                    jsApiList: [
+                        'updateAppMessageShareData',
+                        "updateTimelineShareData"
+                    ]
+
+                })
+                _this.$wx.error((res)=>{
+
+                });
+                _this.$wx.ready(()=>{
+         
+                  //分享给朋友
+                    _this.$wx.updateAppMessageShareData({
+                        title: '多乐十二生肖',
+                        desc: '多乐十二生肖', 
+                        link: urlReal,
+                        imgUrl: imgUrl,
+                        success: function () {
+                            console.log("分享成功");
+                        },
+                        cancel: function () {
+                            console.log("取消分享");
+                        }
+                    }); 
+
+                    _this.$wx.updateTimelineShareData({
+                        title: "多乐十二生肖",   // 分享时的标题
+                        link: urlReal,     // 分享时的链接
+                        imgUrl: imgUrl,    // 分享时的图标
+                        success: function () {
+                            console.log("分享成功");
+                        },
+                        cancel: function () {
+                        }
+                    });
+       
+                });
+                
+            },
+            getShareInfo(){
+                this.$http.get('homepage/ticket',{
+                    headers:{
+                        'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8',
+                    } 
+                    })
+                .then((success) => {
+                    this.shareWX(success.data.ticket, success.data.hb)
+                }, (error) => {
+                console.log(error);
+ 
+                })
+            },
             getRealRowColumn(){
                 let tmpValue = 10000;
                 let realHeight = this.contentHeight - 290;
@@ -459,12 +532,29 @@
     height: 45px;
     font-size: 15px;
     text-align: center;
-    background:#ffffff88;
+    background:#ffffffaa;
     border-radius: 20% 00% 00% 20%;
     color: #f77023;
     padding: 10px;
     
 }
+
+/* .divTop202{
+    position: absolute;
+    right: 0;
+    top: 110px;
+    width: 40px;
+    height: 45px;
+    font-size: 15px;
+    text-align: center;
+    background:#fcc69e88;
+    border-radius: 20% 00% 00% 20%;
+    color: #f77023;
+    padding: 10px;
+    z-index: 10;
+} */
+
+
 .divTop21{
     width: 80px;
     color: #F7F7F7;
@@ -484,7 +574,7 @@
     height: 80px;
     margin-top: 20px;
     background:#ffffff;
-    border-radius: 15px 15px 0% 00%;
+    border-radius: 15px 0px 0% 00%;
     line-height: 80px;
     text-align: left;
     font-weight: bold;

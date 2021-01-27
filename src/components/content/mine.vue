@@ -150,9 +150,7 @@ export default {
         })
     },
     },
-    created(){
-        this.getUserInfo();
-    },
+
     watch:{
         showPageIndex(newValue, oldValue){
             if(newValue == 2 && !this.bFirstCreate){

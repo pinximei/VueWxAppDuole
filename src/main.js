@@ -11,7 +11,11 @@ import oView from "oview";
 import qs from "Qs"
 import Vant from 'vant';
 import 'vant/lib/index.css';
+import sha1 from 'js-sha1'
+import wx from 'weixin-js-sdk'
 
+Vue.prototype.$sha1 = sha1
+Vue.prototype.$wx = wx
 Vue.use(Vant);
 Vue.prototype.$http = axios
 Vue.use(oView);

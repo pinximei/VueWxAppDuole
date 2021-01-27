@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div v-show="showpage != 0">
     <div class="app" v-show="showIndex < 3">
     <div class="app-content" :style="{height:conheight.height}" >
         <homeComp    v-show="showIndex == 0" :showPageIndex="showIndex" :contentHeight="realContentHeight" :contentWidth="realContentWidth"></homeComp>
@@ -47,6 +47,7 @@
       },
       data() {
           return {
+            showpage:0,
             showIndex:0,
             realContentWidth:100,
             realContentHeight:100,
@@ -93,8 +94,15 @@
         }
       },
       created(){
-        
-        this.$store.commit("setCode", this.getUrlKey("code",  window.location.href));
+        let tmpCode = this.getUrlKey("code",  window.location.href);
+        console.log("tmpCode", tmpCode)
+        if(tmpCode==null || tmpCode == ""){
+          console.log("aaaa")
+          window.location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxbe68382a9463a04e&redirect_uri=http%3A%2F%2Fwww.duole.site%2Fdist%2Findex.html&response_type=code&scope=snsapi_base&state=123#wechat_redirect'
+          return;
+        }
+        this.showpage = 1;
+        this.$store.commit("setCode", tmpCode);
         this.$store.state.message += "code" + this.getUrlKey("code",  window.location.href);
         window.addEventListener('resize', this.getHeight);
         this.getHeight()
